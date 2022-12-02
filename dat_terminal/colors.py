@@ -27,26 +27,20 @@ class ColorType(Enum):
 
 class ColorHandler:
     color_palette = {
-        ColorType.PRIMARY: ColorEnum.WHITE,
-        ColorType.SECONDARY: ColorEnum.BLUE,
-        ColorType.WARNING: ColorEnum.YELLOW,
-        ColorType.ERROR: ColorEnum.RED,
     }
 
     @staticmethod
     def initialize():
-        # Todo: default colors if the settings are wrong
-        primary = ColorEnum[ConfigHandler.general('PRIMARY_COLOR').response.upper()]
-        secondary = ColorEnum[ConfigHandler.general('SECONDARY_COLOR').response.upper()]
-        warning = ColorEnum[ConfigHandler.general('WARNING_COLOR').response.upper()]
-        error = ColorEnum[ConfigHandler.general('ERROR_COLOR').response.upper()]
+        ColorHandler.initialize_color('PRIMARY_COLOR', ColorType.PRIMARY)
+        ColorHandler.initialize_color('SECONDARY_COLOR', ColorType.SECONDARY, ColorEnum.BLUE)
+        ColorHandler.initialize_color('WARNING_COLOR', ColorType.WARNING, ColorEnum.YELLOW)
+        ColorHandler.initialize_color('ERROR_COLOR', ColorType.ERROR, ColorEnum.RED)
 
-        ColorHandler.color_palette = {
-            ColorType.PRIMARY: primary,
-            ColorType.SECONDARY: secondary,
-            ColorType.WARNING: warning,
-            ColorType.ERROR: error
-        }
+    @staticmethod
+    def initialize_color(entry_name: str, color_type: ColorType, default_color: ColorEnum = ColorEnum.WHITE):
+        color_text = ConfigHandler.general(entry_name).response.upper()
+        primary = ColorEnum[color_text] if color_text in [x.value for x in ColorEnum] else default_color
+        ColorHandler.color_palette[color_type] = primary
 
     @staticmethod
     def set_primary_color(color: str) -> None:
