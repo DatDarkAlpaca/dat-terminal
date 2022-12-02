@@ -5,10 +5,10 @@ An interactive customizable terminal for applications that need custom commands.
 To install the library, you can run the following command:
 ```
 # Linux/macOS
-python3 -m pip install dat-terminal==0.0.1
+python3 -m pip install dat-terminal
 
 # Windows
-py -3 -m pip install dat-terminal==0.0.1
+py -3 -m pip install dat-terminal
 ```
 
 ## Quick Example
