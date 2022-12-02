@@ -9,6 +9,9 @@ __pycache__/
 # Quick testing:
 quick.py
 
+# Configuration files:
+*.ini
+
 # Idea files:
 .idea
 
