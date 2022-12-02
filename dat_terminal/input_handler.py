@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
-from .config import ConfigHandler
-from .colors import c
+from .config import read_entry
+from .colors import primary
 
 
 @dataclass
@@ -19,8 +19,8 @@ class NullInput(Input):
 class InputHandler:
     @staticmethod
     def get_input() -> Input:
-        prefix = f"{ConfigHandler.get('General', 'PREFIX').response} "
-        user_input = input(c(prefix)).split(' ')
+        prefix = f"{read_entry('General', 'prefix').response} "
+        user_input = input(primary(prefix)).split(' ')
 
         if user_input[0].isspace():
             return NullInput()

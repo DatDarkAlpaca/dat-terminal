@@ -2,6 +2,7 @@ import configparser
 import os.path
 from dataclasses import dataclass
 
+from .paths import config_file_path
 from .utils.string_utils import convert_to_bool
 
 
@@ -17,53 +18,67 @@ class NullResponse(ConfigResponse):
     response = '<null>'
 
 
-class ConfigHandler:
-    config_file_path = './config.ini'
+# Read:
+def read_section(section_name: str) -> dict:
+    config = configparser.ConfigParser()
+    config.read(config_file_path)
 
-    @staticmethod
-    def initialize():
-        if not os.path.isfile(ConfigHandler.config_file_path):
-            ConfigHandler._create_default_config_file()
+    if not config.sections():
+        raise FileNotFoundError('Configuration file not found. Try calling \'config.create_default_config_file()\'')
 
-    @staticmethod
-    def _create_default_config_file():
-        config = configparser.ConfigParser()
+    try:
+        section = config[section_name]
+        return dict(section)
 
-        config['General'] = {
-            'PREFIX': '>',
-            'PRIMARY_COLOR': 'white',
-            'SECONDARY_COLOR': 'blue',
-            'WARNING_COLOR': 'yellow',
-            'ERROR_COLOR': 'red'
-        }
+    except KeyError:
+        # Todo: use the logger to display the error.
+        print('Fatal: invalid section name.')
 
-        with open(ConfigHandler.config_file_path, mode='w') as configfile:
-            config.write(configfile)
+    return {}
 
-    @staticmethod
-    def get(section_name: str, entry: str) -> ConfigResponse:
-        config = configparser.ConfigParser()
-        config.read(ConfigHandler.config_file_path)
 
-        try:
-            value = config[section_name][entry]
-            return ConfigResponse(response=value)
+def read_entry(section_name: str, entry: str) -> ConfigResponse:
+    section = read_section(section_name)
 
-        except KeyError:
-            # Todo: use the logger to display the error.
-            print('Fatal: invalid section name or entry.')
+    try:
+        value = section[entry]
+        return ConfigResponse(response=value)
 
-        return NullResponse()
+    except KeyError:
+        # Todo: use the logger to display the error.
+        print('Fatal: invalid section name or entry.')
 
-    @staticmethod
-    def set(section_name: str, entry: str, value: str) -> None:
-        config = configparser.ConfigParser()
-        config.read(ConfigHandler.config_file_path)
-        config.set(section_name, entry, value)
+    return NullResponse()
 
-        with open(ConfigHandler.config_file_path, mode='w') as configfile:
-            config.write(configfile)
 
-    @staticmethod
-    def general(entry: str) -> ConfigResponse:
-        return ConfigHandler.get('General', entry)
+# Update
+def update_entry(section_name: str, entry: str, value: str) -> None:
+    config = configparser.ConfigParser()
+    config.read(config_file_path)
+    config.set(section_name, entry, value)
+
+    with open(config_file_path, mode='w') as configfile:
+        config.write(configfile)
+
+
+# Default:
+def create_default_config_file():
+    if os.path.isfile(config_file_path):
+        return
+
+    config = configparser.ConfigParser()
+
+    config['General'] = {
+        'prefix': '>',
+        'enable-warnings': 'true'
+    }
+
+    config['DefaultTheme'] = {
+        'primary': 'white',
+        'warning': 'yellow',
+        'error': 'red',
+        'critical': 'red [bold]'
+    }
+
+    with open(config_file_path, mode='w') as configfile:
+        config.write(configfile)

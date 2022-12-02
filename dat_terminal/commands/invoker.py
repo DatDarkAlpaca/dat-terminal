@@ -1,6 +1,7 @@
 from ..input_handler import Input
 from .command import Command
-from ..config import ConfigHandler
+
+from dat_terminal.config import read_entry
 
 
 class CommandInvoker:
@@ -20,7 +21,7 @@ class CommandInvoker:
 
         command = self.command_list.get(user_input.command_identifier)
 
-        if not command and ConfigHandler.general('ENABLE_WARNINGS'):
+        if not command and read_entry('General', 'enable-warnings').as_bool():
             # Todo: use the logger to display warnings
             print('Warning: command does not exist.')
             return
