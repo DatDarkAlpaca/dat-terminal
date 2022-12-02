@@ -14,10 +14,6 @@ class ConfigResponse:
         return convert_to_bool(self.response)
 
 
-class NullResponse(ConfigResponse):
-    response = '<null>'
-
-
 # Read:
 def read_section(section_name: str) -> dict:
     config = configparser.ConfigParser()
@@ -31,10 +27,7 @@ def read_section(section_name: str) -> dict:
         return dict(section)
 
     except KeyError:
-        # Todo: use the logger to display the error.
-        print('Fatal: invalid section name.')
-
-    return {}
+        raise Exception('Invalid section name.')
 
 
 def read_entry(section_name: str, entry: str) -> ConfigResponse:
@@ -45,10 +38,7 @@ def read_entry(section_name: str, entry: str) -> ConfigResponse:
         return ConfigResponse(response=value)
 
     except KeyError:
-        # Todo: use the logger to display the error.
-        print('Fatal: invalid section name or entry.')
-
-    return NullResponse()
+        raise Exception('Invalid section or entry name.')
 
 
 # Update

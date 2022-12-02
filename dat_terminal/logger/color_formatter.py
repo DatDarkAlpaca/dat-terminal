@@ -1,27 +1,24 @@
 import logging
+from dat_terminal.colors import c, use_prop
 
 
 class ColorFormatter(logging.Formatter):
     def format(self, record):
-    '''
-        format_color = {
-            logging.DEBUG: ColorType.PRIMARY,
-            logging.INFO: ColorType.PRIMARY,
-            logging.WARNING: ColorType.WARNING,
-            logging.ERROR: ColorType.ERROR,
-            logging.CRITICAL: ColorType.ERROR,
+        format_prop = {
+            logging.DEBUG: 'primary',
+            logging.INFO: 'primary',
+            logging.WARNING: 'warning',
+            logging.ERROR: 'error',
+            logging.CRITICAL: 'critical',
         }
+        date_text = c('<green>%(asctime)s</green>')
+        message = c('<primary>%(message)s</primary>')
+        logger_name = c('<magenta>%(name)s</magenta>')
 
-        date_text = colored('%(asctime)s', ColorEnum.GREEN)
-        message = c('%(message)s', ColorType.PRIMARY)
-        logger_name = c('%(name)s', ColorType.SECONDARY)
-        level = c('%(levelname)s', format_color[record.levelno])
+        level_prop = format_prop[record.levelno]
+        level = use_prop('%(levelname)s', level_prop)
 
-        log_format = f"{date_text} | {colored('[', ColorEnum.WHITE)}" \
-                     f"{level}{colored(']', ColorEnum.WHITE)} {logger_name}: {message}"
-
+        log_format = f"{date_text} | [{level}] {logger_name}: {message}"
         formatter = logging.Formatter(log_format)
-        return formatter.format(record)
-    '''
-    pass
 
+        return formatter.format(record)

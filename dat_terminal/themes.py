@@ -53,6 +53,18 @@ class Theme:
         }
 
 
+theme = Theme()
+
+
+def get_theme() -> Theme():
+    return theme
+
+
+def set_theme(theme_name: str):
+    global theme
+    theme = load_theme(theme_name)
+
+
 def load_theme(theme_name: str) -> Theme:
     theme_section = read_section(theme_name)
     theme_content = dict(theme_section)

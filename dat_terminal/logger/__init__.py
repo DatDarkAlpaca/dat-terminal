@@ -28,5 +28,21 @@ class Logger(metaclass=Singleton):
         Logger._logger = logging.getLogger()
 
     @classmethod
+    def debug(cls, message: str):
+        cls._logger.debug(message)
+
+    @classmethod
     def info(cls, message: str):
         cls._logger.info(message)
+
+    @classmethod
+    def warning(cls, message: str):
+        cls._logger.warning(message)
+
+    @classmethod
+    def error(cls, message: str):
+        cls._logger.error(message)
+
+    @classmethod
+    def critical(cls, message: str):
+        cls._logger.critical(message)
