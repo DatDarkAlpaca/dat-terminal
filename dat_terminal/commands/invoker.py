@@ -1,6 +1,7 @@
 from ..input_handler import Input
 from .command import Command
-from ..config import ConfigHandler
+
+from dat_terminal.config import read_entry
 
 
 class CommandInvoker:
@@ -8,8 +9,11 @@ class CommandInvoker:
         self.command_list = {}
 
     def add_command(self, name: str, command: Command, aliases: tuple[str] = None) -> None:
-        for command_name in [*aliases, name]:
-            self.command_list[command_name] = command
+        if aliases:
+            for command_name in aliases:
+                self.command_list[command_name] = command
+        
+        self.command_list[name] = command
 
     def invoke_command(self, user_input: Input) -> None:
         if not user_input.command_identifier:
@@ -17,7 +21,7 @@ class CommandInvoker:
 
         command = self.command_list.get(user_input.command_identifier)
 
-        if not command and ConfigHandler.general('ENABLE_WARNINGS'):
+        if not command and read_entry('General', 'enable-warnings').as_bool():
             # Todo: use the logger to display warnings
             print('Warning: command does not exist.')
             return
