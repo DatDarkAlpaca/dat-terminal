@@ -86,3 +86,15 @@ def use_prop(text: str, prop: str) -> str:
 def primary(text: str) -> str:
     return c(f"<primary>{text}</primary>")
 
+
+def warning(text: str) -> str:
+    return c(f"<warning>{text}</warning>")
+
+
+def error(text: str) -> str:
+    return c(f"<error>{text}</error>")
+
+
+def critical(text: str) -> str:
+    return c(f"<critical>{text}</critical>")
+
