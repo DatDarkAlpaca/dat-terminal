@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 DESCRIPTION = 'An interactive terminal for applications that needs custom commands.'
-VERSION = '0.0.1'
+VERSION = '0.0.1b'
 
 
 setup(

@@ -1,40 +1,32 @@
 # dat-terminal
 An interactive customizable terminal for applications that need custom commands.
 
-Quick example:
+## Installing
+To install the library, you can run the following command:
+```
+# Linux/macOS
+python3 -m pip install dat-terminal==0.0.1
 
+# Windows
+py -3 -m pip install dat-terminal==0.0.1
+```
+
+## Quick Example
 ```py
-# Dat Terminal:
-from dat_terminal import DatTerminal
-
-from dat_terminal.commands import Command
-from dat_terminal.input_handler import Input
-from dat_terminal.colors import ColorType, c
+import dat_terminal
+import sys
 
 
-class QuitCommand(Command):
-    def execute(self, user_input: Input) -> None:
-        print(c('Bye bye!', ColorType.WARNING))
-
-        import sys
+class QuitCommand(dat_terminal.Command):
+    def execute(self, user_input: dat_terminal.Input) -> None:
         code = user_input.arguments[0] if user_input.arguments else 0
         sys.exit(code)
 
 
-class EchoCommand(Command):
-    def execute(self, user_input: Input) -> None:
-        text = ''.join(user_input.arguments)
-        print(c(text))
+dat_terminal.init()
 
+terminal = dat_terminal.DatTerminal()
+terminal.invoker.add_command('quit', QuitCommand(), aliases=('q', 'exit'))
+terminal.run()
 
-def main():
-    terminal = DatTerminal()
-    terminal.invoker.add_command(name='quit', aliases=('exit', 'leave'), command=QuitCommand())
-    terminal.invoker.add_command(name='echo', aliases='say', command=EchoCommand())
-
-    terminal.run()
-
-
-if __name__ == '__main__':
-    main()
 ```

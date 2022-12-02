@@ -18,6 +18,7 @@ def c(text: str) -> str:
 
     # Colors:
     theme = get_theme()
+
     for key, color in theme.colors.items():
         styled_portion = re.findall(f"<{key}>(.*?)</{key}>", text)
 
